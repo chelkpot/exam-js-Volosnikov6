@@ -1,0 +1,80 @@
+name: Autograding
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: ["**"]
+
+permissions:
+  checks: write
+  actions: read
+  contents: read
+
+jobs:
+  grade:
+    name: Run Tests & Calculate Score
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        id: run-tests
+        run: npm test
+        continue-on-error: true
+
+      - name: Calculate score
+        id: score
+        run: |
+          node -e "
+          const fs = require('fs');
+          let results;
+          try {
+            results = JSON.parse(fs.readFileSync('results.json', 'utf8'));
+          } catch (e) {
+            console.log('Score: 0/10');
+            process.exit(0);
+          }
+
+          const totalSuites = results.numTotalTestSuites;
+          const passedSuites = results.testResults.filter(r => r.status === 'passed').length;
+          const totalTests  = results.numTotalTests;
+          const passedTests = results.numPassedTests;
+
+          console.log('=== РЕЗУЛЬТАТЫ ЭКЗАМЕНА ===');
+          results.testResults.forEach((suite, i) => {
+            const taskNum = String(i + 1).padStart(2, '0');
+            const ok = suite.status === 'passed' ? '✅' : '❌';
+            const passed = suite.numPassingTests;
+            const total  = suite.numPassingTests + suite.numFailingTests;
+            console.log(ok + ' Задание ' + taskNum + ': ' + passed + '/' + total + ' тестов');
+          });
+
+          console.log('');
+          console.log('Пройдено заданий: ' + passedSuites + '/' + totalSuites);
+          console.log('Пройдено тестов:  ' + passedTests  + '/' + totalTests);
+
+          const score = Math.round((passedSuites / totalSuites) * 100);
+          console.log('');
+          console.log('ИТОГОВЫЙ БАЛЛ: ' + score + '/100');
+          "
+
+      - name: Publish test report
+        uses: dorny/test-reporter@v1
+        if: always()
+        with:
+          name: Jest Test Results
+          path: results.json
+          reporter: jest-json
+          fail-on-error: false

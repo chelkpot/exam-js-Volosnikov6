@@ -1,0 +1,430 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🧪 Тестирование JS Экзамена</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px;
+      }
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        overflow: hidden;
+      }
+      header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 30px;
+        text-align: center;
+      }
+      h1 {
+        margin-bottom: 10px;
+        font-size: 2.5em;
+      }
+      .subtitle {
+        opacity: 0.9;
+        font-size: 1.1em;
+      }
+      main {
+        padding: 30px;
+      }
+      .instructions {
+        background: #f0f4ff;
+        border-left: 4px solid #667eea;
+        padding: 20px;
+        margin-bottom: 30px;
+        border-radius: 5px;
+      }
+      .instructions h2 {
+        color: #667eea;
+        margin-bottom: 10px;
+      }
+      .instructions ol {
+        margin-left: 20px;
+        line-height: 1.8;
+      }
+      .tasks-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 15px;
+        margin: 30px 0;
+      }
+      .task-card {
+        background: #f8f9fa;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 15px;
+        cursor: pointer;
+        transition: all 0.3s;
+        text-align: center;
+      }
+      .task-card:hover {
+        border-color: #667eea;
+        background: #f0f4ff;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+      }
+      .task-card .task-number {
+        font-size: 2em;
+        font-weight: bold;
+        color: #667eea;
+      }
+      .task-card .task-name {
+        margin-top: 10px;
+        font-size: 0.9em;
+        color: #666;
+      }
+      .task-card .status {
+        margin-top: 10px;
+        font-size: 1.5em;
+      }
+      .results {
+        background: #f8f9fa;
+        border-radius: 8px;
+        padding: 20px;
+        margin-top: 30px;
+        max-height: 400px;
+        overflow-y: auto;
+      }
+      .results pre {
+        background: #f0f0f0;
+        padding: 15px;
+        border-radius: 5px;
+        font-size: 0.9em;
+        color: #333;
+        line-height: 1.5;
+      }
+      .summary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 20px;
+        border-radius: 8px;
+        margin-top: 20px;
+        text-align: center;
+      }
+      .score {
+        font-size: 3em;
+        font-weight: bold;
+        margin: 10px 0;
+      }
+      .status-passed {
+        color: #4caf50;
+      }
+      .status-failed {
+        color: #f44336;
+      }
+      button {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1em;
+        transition: transform 0.2s;
+        margin: 5px;
+      }
+      button:hover {
+        transform: scale(1.05);
+      }
+      button:active {
+        transform: scale(0.95);
+      }
+      .loading {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 3px solid #f3f3f3;
+        border-top: 3px solid #667eea;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>🧪 Тестирование JS Экзамена</h1>
+        <p class="subtitle">Проверка всех 10 заданий</p>
+      </header>
+
+      <main>
+        <div class="instructions">
+          <h2>📖 Инструкция</h2>
+          <ol>
+            <li>Откройте эту страницу в браузере.</li>
+            <li>Нажмите кнопку <strong>"▶️ Запустить тесты"</strong>.</li>
+            <li>Подождите, пока появятся результаты ниже.</li>
+            <li>
+              Если тест не прошёл, исправьте задачу и нажмите кнопку снова.
+            </li>
+          </ol>
+          <p style="margin-top: 10px; color: #333">
+            Тестовая страница сама загружает файлы из папки <code>tasks/</code>.
+            Не нужно копировать код в консоль.
+          </p>
+        </div>
+
+        <div
+          style="
+            background: #f0f0f0;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+          "
+        >
+          <strong>🔗 Или используйте готовый скрипт:</strong>
+          <button onclick="runAllTests()">▶️ Запустить тесты</button>
+        </div>
+
+        <div style="text-align: center; margin-bottom: 20px">
+          <button onclick="location.reload()">🔄 Обновить страницу</button>
+        </div>
+
+        <div class="tasks-grid" id="tasksGrid"></div>
+        <div class="results" id="results" style="display: none"></div>
+        <div class="summary" id="summary" style="display: none"></div>
+      </main>
+    </div>
+
+    <script type="module">
+      const tasks = [
+        {
+          id: 1,
+          name: "Чётные числа",
+          path: "./tasks/task01/task.js",
+          funcName: "filterEven",
+          validator: (fn) =>
+            deepEqual(fn([1, 2, 3, 4, 5, 6]), [2, 4, 6]) &&
+            deepEqual(fn([7, 9, 11]), []),
+        },
+        {
+          id: 2,
+          name: "Сумма массива",
+          path: "./tasks/task02/task.js",
+          funcName: "sumArray",
+          validator: (fn) => fn([1, 2, 3, 4, 5]) === 15 && fn([]) === 0,
+        },
+        {
+          id: 3,
+          name: "FizzBuzz",
+          path: "./tasks/task03/task.js",
+          funcName: "fizzBuzz",
+          validator: (fn) =>
+            deepEqual(fn(5), ["1", "2", "Fizz", "4", "Buzz"]) &&
+            fn(1)[0] === "1",
+        },
+        {
+          id: 4,
+          name: "Максимальный элемент",
+          path: "./tasks/task04/task.js",
+          funcName: "findMax",
+          validator: (fn) => fn([3, 1, 7, 2, 5]) === 7,
+        },
+        {
+          id: 5,
+          name: "Переворот строки",
+          path: "./tasks/task05/task.js",
+          funcName: "reverseString",
+          validator: (fn) => fn("hello") === "olleh" && fn("") === "",
+        },
+        {
+          id: 6,
+          name: "Подсчёт вхождений",
+          path: "./tasks/task06/task.js",
+          funcName: "countOccurrences",
+          validator: (fn) => fn([1, 2, 3, 2, 1, 2], 2) === 3,
+        },
+        {
+          id: 7,
+          name: "Сглаживание массива",
+          path: "./tasks/task07/task.js",
+          funcName: "flattenOnce",
+          validator: (fn) =>
+            deepEqual(fn([1, [2, 3], [4, 5], 6]), [1, 2, 3, 4, 5, 6]),
+        },
+        {
+          id: 8,
+          name: "Калькулятор оценок",
+          path: "./tasks/task08/task.js",
+          funcName: "getGrade",
+          validator: (fn) =>
+            fn(95) === "отлично" &&
+            fn(80) === "хорошо" &&
+            fn(65) === "удовлетворительно",
+        },
+        {
+          id: 9,
+          name: "Суммы строк матрицы",
+          path: "./tasks/task09/task.js",
+          funcName: "rowSums",
+          validator: (fn) =>
+            deepEqual(
+              fn([
+                [1, 2, 3],
+                [4, 5, 6],
+              ]),
+              [6, 15],
+            ),
+        },
+        {
+          id: 10,
+          name: "Уникальные элементы",
+          path: "./tasks/task10/task.js",
+          funcName: "getUnique",
+          validator: (fn) => deepEqual(fn([1, 2, 2, 3, 1, 4]), [1, 2, 3, 4]),
+        },
+      ];
+
+      const statusEmojis = {
+        pending: "⏳",
+        passed: "✅",
+        failed: "❌",
+      };
+
+      function deepEqual(a, b) {
+        return JSON.stringify(a) === JSON.stringify(b);
+      }
+
+      function renderTasks() {
+        const grid = document.getElementById("tasksGrid");
+        tasks.forEach((task) => {
+          const card = document.createElement("div");
+          card.className = "task-card";
+          card.innerHTML = `
+                    <div class="task-number">Task ${String(task.id).padStart(2, "0")}</div>
+                    <div class="task-name">${task.name}</div>
+                    <div class="status" id="status-${task.id}">${statusEmojis.pending}</div>
+                `;
+          grid.appendChild(card);
+        });
+      }
+
+      const baseUrl = new URL(".", import.meta.url).href;
+
+      async function loadCommonJS(path) {
+        const url = new URL(path, baseUrl).href;
+        return loadCommonJSScript(url);
+      }
+
+      function loadCommonJSScript(url) {
+        return new Promise((resolve, reject) => {
+          const module = { exports: {} };
+          const exports = module.exports;
+          const oldModule = window.module;
+          const oldExports = window.exports;
+          window.module = module;
+          window.exports = exports;
+
+          const script = document.createElement("script");
+          script.src = url;
+          script.onload = () => {
+            window.module = oldModule;
+            window.exports = oldExports;
+            script.remove();
+            resolve(module.exports);
+          };
+          script.onerror = () => {
+            window.module = oldModule;
+            window.exports = oldExports;
+            script.remove();
+            reject(
+              new Error(`Не удалось загрузить файл через <script>: ${url}`),
+            );
+          };
+          document.head.appendChild(script);
+        });
+      }
+
+      async function runAllTests() {
+        document.getElementById("results").style.display = "block";
+        document.getElementById("summary").style.display = "block";
+
+        const resultsDiv = document.getElementById("results");
+        const summaryDiv = document.getElementById("summary");
+        resultsDiv.innerHTML = '<div class="loading"></div> Загрузка тестов...';
+        summaryDiv.innerHTML = "";
+
+        const testResults = [];
+        let passedCount = 0;
+
+        for (const task of tasks) {
+          const statusEl = document.getElementById(`status-${task.id}`);
+          statusEl.textContent = statusEmojis.pending;
+
+          try {
+            const module = await loadCommonJS(task.path);
+            const fn = module[task.funcName];
+            if (typeof fn !== "function") {
+              throw new Error(`Функция ${task.funcName} не найдена`);
+            }
+
+            const passed = task.validator(fn);
+            if (!passed) {
+              throw new Error("Функция возвращает неверный результат");
+            }
+
+            testResults.push({
+              id: task.id,
+              name: task.name,
+              status: "passed",
+            });
+            statusEl.textContent = statusEmojis.passed;
+            passedCount += 1;
+          } catch (error) {
+            testResults.push({
+              id: task.id,
+              name: task.name,
+              status: "failed",
+              error: error.message,
+            });
+            statusEl.textContent = statusEmojis.failed;
+          }
+        }
+
+        let resultsHTML = "<h3>📊 Результаты тестов:</h3><pre>";
+        testResults.forEach((r) => {
+          const icon = r.status === "passed" ? "✅" : "❌";
+          resultsHTML += `${icon} Task ${String(r.id).padStart(2, "0")}: ${r.name}\n`;
+          if (r.error) {
+            resultsHTML += `   Ошибка: ${r.error}\n`;
+          }
+        });
+        resultsHTML += "</pre>";
+
+        resultsDiv.innerHTML = resultsHTML;
+
+        const score = Math.round((passedCount / tasks.length) * 100);
+        summaryDiv.innerHTML = `
+                    <h2>Итоги экзамена</h2>
+                    <div class="score">${score}/100</div>
+                    <p>Пройдено заданий: <strong>${passedCount}/${tasks.length}</strong></p>
+                `;
+      }
+
+      window.runAllTests = runAllTests;
+      document.addEventListener("DOMContentLoaded", renderTasks);
+    </script>
+  </body>
+</html>

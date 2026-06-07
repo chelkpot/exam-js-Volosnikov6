@@ -1,0 +1,15 @@
+{
+  "name": "js-exam",
+  "version": "1.0.0",
+  "description": "Экзамен по JavaScript",
+  "scripts": {
+    "test": "jest --json --outputFile=results.json --testPathPattern='(task\\.test\\.js|tasks/)' || true",
+    "test:verbose": "jest --verbose --testPathPattern='(task\\.test\\.js|tasks/)'"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  },
+  "jest": {
+    "testEnvironment": "node"
+  }
+}
