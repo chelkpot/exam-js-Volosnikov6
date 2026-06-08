@@ -13,7 +13,8 @@
 
 function reverseString(str) {
   
-  // Ваш код здесь
+  return str.split('').reverse().join('');
 }
+
 
 module.exports = { reverseString };

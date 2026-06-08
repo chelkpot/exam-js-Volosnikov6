@@ -14,7 +14,7 @@
 
 function getUnique(arr) {
   
-  // Ваш код здесь
+  return arr.filter((item, index) => arr.indexOf(item) === index);
 }
 
 module.exports = { getUnique };

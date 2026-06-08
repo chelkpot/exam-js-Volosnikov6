@@ -12,7 +12,7 @@
 
 function rowSums(matrix) {
   
-  // Ваш код здесь
+  return matrix.map(row => row.reduce((sum, num) => sum + num, 0));
 }
 
 module.exports = { rowSums };

@@ -14,7 +14,8 @@
 
 function flattenOnce(arr) {
   
-  // Ваш код здесь
+  return [].concat(...arr);
 }
+
 
 module.exports = { flattenOnce };

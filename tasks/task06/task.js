@@ -13,7 +13,16 @@
 
 function countOccurrences(arr, value) {
   
-  // Ваш код здесь
+  let count = 0;
+  
+  for (const item of arr) {
+    if (item === value) {
+      count++;
+    }
+  }
+  
+  return count;
 }
+
 
 module.exports = { countOccurrences };

@@ -11,7 +11,11 @@
 
 function filterEven(arr) {
   
-  // Ваш код здесь
+ 
+  return arr.filter(num => num % 2 === 0);
 }
+
+
+
 
 module.exports = { filterEven };
